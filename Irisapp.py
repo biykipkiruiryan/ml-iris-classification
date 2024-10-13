@@ -1,7 +1,7 @@
-# Importing necessary libraries
 import streamlit as st
 import pandas as pd
 import seaborn as sns
+print(sns.__version__)
 import matplotlib.pyplot as plt
 from sklearn import datasets
 from sklearn.model_selection import train_test_split
@@ -14,13 +14,12 @@ iris = datasets.load_iris()
 iris_df = pd.DataFrame(data=iris.data, columns=iris.feature_names)
 iris_df['Species'] = iris.target
 
-# Title and description of the app
 st.title("Iris Flower Classification App")
 st.write("""
 This app classifies Iris flowers into three species: **Setosa**, **Versicolor**, or **Virginica**. 
 You can adjust the features using the sliders and the decision tree classifier will predict the species.
 """)
-# Tab layout for displaying the corresponding species image based on prediction
+# Tab layout for displaying species image based on prediction
 tab1, tab2, tab3 = st.tabs(["Versicolor", "Setosa", "Virginica"])
 with tab1:
     st.header("Versicolor")
@@ -68,7 +67,7 @@ prediction = dt.predict(input_data)
 species_map = {0: 'Setosa', 1: 'Versicolor', 2: 'Virginica'}
 predicted_species = species_map[prediction[0]]
 
-# Displaying the result
+#the result
 st.subheader("Prediction:")
 st.write(f"The predicted species is: **{predicted_species}**")
 # Display the corresponding species image right after the prediction
@@ -79,14 +78,14 @@ elif predicted_species == 'Setosa':
 elif predicted_species == 'Virginica':
     st.image("https://wiki.irises.org/pub//Spec/SpecVirginica/ivirginicagiantblue01.jpg", width=180)
 
-# Test the model on test data and show accuracy
+# Test the model and show accuracy
 prediction_dt = dt.predict(X_test)
 accuracy_dt = accuracy_score(y_test, prediction_dt) * 100
 
 st.subheader("Model Accuracy:")
 st.write(f"Accuracy of the Decision Tree classifier on test data: {accuracy_dt:.2f}%")
 
-# Plot the decision tree
+#the decision tree
 st.subheader("Decision Tree Visualization")
 plt.figure(figsize=(12, 8))
 tree.plot_tree(dt, feature_names=iris.feature_names, class_names=iris.target_names, filled=True)
