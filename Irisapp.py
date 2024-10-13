@@ -79,3 +79,15 @@ elif predicted_species == 'Setosa':
 elif predicted_species == 'Virginica':
     st.image("https://wiki.irises.org/pub//Spec/SpecVirginica/ivirginicagiantblue01.jpg", width=180)
 
+# Test the model and show accuracy
+prediction_dt = dt.predict(X_test)
+accuracy_dt = accuracy_score(y_test, prediction_dt) * 100
+
+st.subheader("Model Accuracy:")
+st.write(f"Accuracy of the Decision Tree classifier on test data: {accuracy_dt:.2f}%")
+
+# Decision tree visualization
+st.subheader("Decision Tree Visualization")
+plt.figure(figsize=(12, 8))
+tree.plot_tree(dt, feature_names=iris.feature_names, class_names=iris.target_names, filled=True)
+st.pyplot(plt)
