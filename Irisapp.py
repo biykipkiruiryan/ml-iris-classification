@@ -12,11 +12,13 @@ iris = datasets.load_iris()
 iris_df = pd.DataFrame(data=iris.data, columns=iris.feature_names)
 iris_df['Species'] = iris.target
 
+# Title and description of the app
 st.title("Iris Flower Classification App")
 st.write("""
 This app classifies Iris flowers into three species: **Setosa**, **Versicolor**, or **Virginica**. 
-You can adjust the features using the sliders and the decision tree classifier will predict the species.
+You can adjust the features using the sliders, and the decision tree classifier will predict the species.
 """)
+
 # Tab layout for displaying species image based on prediction
 tab1, tab2, tab3 = st.tabs(["Versicolor", "Setosa", "Virginica"])
 with tab1:
@@ -65,9 +67,10 @@ prediction = dt.predict(input_data)
 species_map = {0: 'Setosa', 1: 'Versicolor', 2: 'Virginica'}
 predicted_species = species_map[prediction[0]]
 
-#the result
+# Display the result
 st.subheader("Prediction:")
 st.write(f"The predicted species is: **{predicted_species}**")
+
 # Display the corresponding species image right after the prediction
 if predicted_species == 'Versicolor':
     st.image("https://daylily-phlox.eu/wp-content/uploads/2016/08/Iris-versicolor-1.jpg", width=180)
@@ -83,7 +86,7 @@ accuracy_dt = accuracy_score(y_test, prediction_dt) * 100
 st.subheader("Model Accuracy:")
 st.write(f"Accuracy of the Decision Tree classifier on test data: {accuracy_dt:.2f}%")
 
-#the decision tree
+# Decision tree visualization
 st.subheader("Decision Tree Visualization")
 plt.figure(figsize=(12, 8))
 tree.plot_tree(dt, feature_names=iris.feature_names, class_names=iris.target_names, filled=True)
