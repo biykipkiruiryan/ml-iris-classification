@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import seaborn as sns
+print(sns.__version__)
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 
@@ -12,7 +13,7 @@ st.write("This app classifies Iris flowers into different species based on their
 st.header('Choose your parameters')
 
 # Reading and preparing the dataset
-Dataframe = pd.read_csv('iris.data.csv', header=None)
+Dataframe = pd.read_csv('Iris.csv', header=None)
 Dataframe.rename(columns={
     0: 'sepal length (cm)', 
     1: 'sepal width (cm)',
