@@ -2,7 +2,6 @@
 import streamlit as st
 import pandas as pd
 import seaborn as sns
-print(sns.__version__)
 import matplotlib.pyplot as plt
 from sklearn import datasets
 from sklearn.model_selection import train_test_split
@@ -72,3 +71,26 @@ st.subheader("Decision Tree Visualization")
 plt.figure(figsize=(12, 8))
 tree.plot_tree(dt, feature_names=iris.feature_names, class_names=iris.target_names, filled=True)
 st.pyplot(plt)
+
+# Tab layout for displaying the corresponding species image based on prediction
+tab1, tab2, tab3 = st.tabs(["Versicolor", "Setosa", "Virginica"])
+
+with tab1:
+    st.header("Versicolor")
+    st.image("https://daylily-phlox.eu/wp-content/uploads/2016/08/Iris-versicolor-1.jpg", width=180)
+
+with tab2:
+    st.header("Setosa")
+    st.image("https://live.staticflickr.com/65535/51376589362_b92e27ae7a_b.jpg", width=180)
+
+with tab3:
+    st.header("Virginica")
+    st.image("https://wiki.irises.org/pub//Spec/SpecVirginica/ivirginicagiantblue01.jpg", width=180)
+
+# Display image of the predicted species on the sidebar
+if predicted_species == 'Versicolor':
+    st.sidebar.image("https://daylily-phlox.eu/wp-content/uploads/2016/08/Iris-versicolor-1.jpg", width=180)
+elif predicted_species == 'Setosa':
+    st.sidebar.image("https://live.staticflickr.com/65535/51376589362_b92e27ae7a_b.jpg", width=180)
+elif predicted_species == 'Virginica':
+    st.sidebar.image("https://wiki.irises.org/pub//Spec/SpecVirginica/ivirginicagiantblue01.jpg", width=180)
