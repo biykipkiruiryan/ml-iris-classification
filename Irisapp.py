@@ -1,13 +1,9 @@
 import streamlit as st
-import pandas as pd
+import pandas as pd 
 import seaborn as sns
-print(sns.__version__)
-import matplotlib.pyplot as plt
-from sklearn import datasets
-from sklearn.model_selection import train_test_split
-from sklearn.tree import DecisionTreeClassifier
-from sklearn import tree
-from sklearn.metrics import accuracy_score
+import matplotlib.pyplot as plt 
+import numpy as np
+
 
 # Load Iris dataset from sklearn
 iris = datasets.load_iris()
