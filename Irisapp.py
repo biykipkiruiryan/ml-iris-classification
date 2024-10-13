@@ -1,55 +1,74 @@
+# Importing necessary libraries
 import streamlit as st
 import pandas as pd
 import seaborn as sns
 print(sns.__version__)
 import matplotlib.pyplot as plt
+from sklearn import datasets
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn import tree
+from sklearn.metrics import accuracy_score
 
-st.title('Iris Flower Classification')
-st.write("This app classifies Iris flowers into different species based on their features.")
-st.header('Choose your parameters')
+# Load Iris dataset from sklearn
+iris = datasets.load_iris()
+iris_df = pd.DataFrame(data=iris.data, columns=iris.feature_names)
+iris_df['Species'] = iris.target
 
-# Load and prepare the dataset
-Dataframe = pd.read_csv('Iris.csv', header=None)
-Dataframe.rename(columns={
-    0: 'sepal length (cm)', 
-    1: 'sepal width (cm)',
-    2: 'petal length (cm)',
-    3: 'petal width (cm)',
-    4: 'Class'}, inplace=True)
+# Title and description of the app
+st.title("Iris Flower Classification App")
+st.write("""
+This app classifies Iris flowers into three species: **Setosa**, **Versicolor**, or **Virginica**. 
+You can adjust the features using the sliders and the decision tree classifier will predict the species.
+""")
 
-# Sidebar sliders for user input
-sepal_length = st.sidebar.slider('sepal length (cm)', 4.30, 7.90, 5.84)
-sepal_width = st.sidebar.slider('sepal width (cm)', 2.00, 4.40, 3.05)
-petal_length = st.sidebar.slider('petal length (cm)', 1.00, 6.90, 3.76)
-petal_width = st.sidebar.slider('petal width (cm)', 0.10, 2.50, 1.20)
+# Main page sliders for user input
+sepal_length = st.slider('Sepal Length (cm)', float(iris_df['sepal length (cm)'].min()), float(iris_df['sepal length (cm)'].max()), float(iris_df['sepal length (cm)'].mean()))
+sepal_width = st.slider('Sepal Width (cm)', float(iris_df['sepal width (cm)'].min()), float(iris_df['sepal width (cm)'].max()), float(iris_df['sepal width (cm)'].mean()))
+petal_length = st.slider('Petal Length (cm)', float(iris_df['petal length (cm)'].min()), float(iris_df['petal length (cm)'].max()), float(iris_df['petal length (cm)'].mean()))
+petal_width = st.slider('Petal Width (cm)', float(iris_df['petal width (cm)'].min()), float(iris_df['petal width (cm)'].max()), float(iris_df['petal width (cm)'].mean()))
 
-# User input DataFrame
-user_input = {'sepal length (cm)': sepal_length,
-              'sepal width (cm)': sepal_width,
-              'petal length (cm)': petal_length,
-              'petal width (cm)': petal_width}
+# Collecting input from the sliders
+input_data = pd.DataFrame({
+    'sepal length (cm)': [sepal_length],
+    'sepal width (cm)': [sepal_width],
+    'petal length (cm)': [petal_length],
+    'petal width (cm)': [petal_width]
+})
 
-user_data = pd.DataFrame(user_input, index=[0])
+# Display user input
+st.subheader("Your Input:")
+st.table(input_data)
 
-# Splitting the dataset into features (X) and labels (Y)
-X = Dataframe.drop('Class', axis=1)
-Y = Dataframe['Class']
+# Splitting dataset into train and test sets
+X = iris.data
+y = iris.target
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=100)
 
-# Split into training and test sets
-x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.2, random_state=43)
+# Train Decision Tree classifier
+dt = DecisionTreeClassifier(random_state=100)
+dt.fit(X_train, y_train)
 
-# Train a RandomForestClassifier
-clf = RandomForestClassifier(n_estimators=100)
-clf.fit(x_train, y_train)
+# Predict based on user input
+prediction = dt.predict(input_data)
 
-# When the user clicks the predict button, classify the input
-if st.sidebar.button('Predict'):
-   # Predict the class based on user input
-   user_data['Class'] = clf.predict(user_data)
-   
-   # Display the user input and predicted class
-   st.text('User Data')
-   st.table(user_data)
-   st.sidebar.write(f"Predicted Class: {user_data['Class'].values[0]}")
+# Mapping predicted value to the class label
+species_map = {0: 'Setosa', 1: 'Versicolor', 2: 'Virginica'}
+predicted_species = species_map[prediction[0]]
+
+# Displaying the result
+st.subheader("Prediction:")
+st.write(f"The predicted species is: **{predicted_species}**")
+
+# Test the model on test data and show accuracy
+prediction_dt = dt.predict(X_test)
+accuracy_dt = accuracy_score(y_test, prediction_dt) * 100
+
+st.subheader("Model Accuracy:")
+st.write(f"Accuracy of the Decision Tree classifier on test data: {accuracy_dt:.2f}%")
+
+# Plot the decision tree
+st.subheader("Decision Tree Visualization")
+plt.figure(figsize=(12, 8))
+tree.plot_tree(dt, feature_names=iris.feature_names, class_names=iris.target_names, filled=True)
+st.pyplot(plt)
