@@ -1,9 +1,11 @@
 import streamlit as st
-import pandas as pd 
+import pandas as pd
 import seaborn as sns
-import matplotlib.pyplot as plt 
-import numpy as np
-
+import matplotlib.pyplot as plt
+from sklearn import datasets
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score
 
 # Load Iris dataset from sklearn
 iris = datasets.load_iris()
@@ -15,19 +17,6 @@ st.write("""
 This app classifies Iris flowers into three species: **Setosa**, **Versicolor**, or **Virginica**. 
 You can adjust the features using the sliders and the decision tree classifier will predict the species.
 """)
-# Tab layout for displaying species image based on prediction
-tab1, tab2, tab3 = st.tabs(["Versicolor", "Setosa", "Virginica"])
-with tab1:
-    st.header("Versicolor")
-    st.image("https://daylily-phlox.eu/wp-content/uploads/2016/08/Iris-versicolor-1.jpg", width=180)
-
-with tab2:
-    st.header("Setosa")
-    st.image("https://live.staticflickr.com/65535/51376589362_b92e27ae7a_b.jpg", width=180)
-
-with tab3:
-    st.header("Virginica")
-    st.image("https://wiki.irises.org/pub//Spec/SpecVirginica/ivirginicagiantblue01.jpg", width=180)
 
 # Main page sliders for user input
 sepal_length = st.slider('Sepal Length (cm)', float(iris_df['sepal length (cm)'].min()), float(iris_df['sepal length (cm)'].max()), float(iris_df['sepal length (cm)'].mean()))
@@ -63,16 +52,9 @@ prediction = dt.predict(input_data)
 species_map = {0: 'Setosa', 1: 'Versicolor', 2: 'Virginica'}
 predicted_species = species_map[prediction[0]]
 
-#the result
+# Display the result
 st.subheader("Prediction:")
 st.write(f"The predicted species is: **{predicted_species}**")
-# Display the corresponding species image right after the prediction
-if predicted_species == 'Versicolor':
-    st.image("https://daylily-phlox.eu/wp-content/uploads/2016/08/Iris-versicolor-1.jpg", width=180)
-elif predicted_species == 'Setosa':
-    st.image("https://live.staticflickr.com/65535/51376589362_b92e27ae7a_b.jpg", width=180)
-elif predicted_species == 'Virginica':
-    st.image("https://wiki.irises.org/pub//Spec/SpecVirginica/ivirginicagiantblue01.jpg", width=180)
 
 # Test the model and show accuracy
 prediction_dt = dt.predict(X_test)
@@ -80,9 +62,3 @@ accuracy_dt = accuracy_score(y_test, prediction_dt) * 100
 
 st.subheader("Model Accuracy:")
 st.write(f"Accuracy of the Decision Tree classifier on test data: {accuracy_dt:.2f}%")
-
-#the decision tree
-st.subheader("Decision Tree Visualization")
-plt.figure(figsize=(12, 8))
-tree.plot_tree(dt, feature_names=iris.feature_names, class_names=iris.target_names, filled=True)
-st.pyplot(plt)
