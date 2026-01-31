@@ -3,3 +3,4 @@ pandas
 seaborn
 matplotlib
 scikit-learn
+protobuf>=6.33.5 # not directly required, pinned by Snyk to avoid a vulnerability
